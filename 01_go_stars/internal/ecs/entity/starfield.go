@@ -7,7 +7,9 @@ type StarField struct {
 func NewStarField(starCount uint16, width, height float32) *StarField {
 	stars := make([]*Star, starCount)
 	for i := range stars {
-		stars[i] = NewStar(width, height)
+		star := NewStar(width, height)
+		star.Color = star.starColor()
+		stars[i] = star
 	}
 
 	return &StarField{

@@ -14,20 +14,19 @@ type Star struct {
 }
 
 func NewStar(width, height float32) *Star {
-	brightness := randomFloat32(0.3, 1.0)
+	brightness := randomFloat32(0.2, 1.0)
 
 	return &Star{
 		Position:   rl.NewVector2(rand.Float32()*width, rand.Float32()*height),
 		Brightness: brightness,
 		Radius:     randomFloat32(1.0, 2.5),
-		Color:      starColor(brightness),
 	}
 }
 
-func starColor(brightness float32) rl.Color {
+func (s *Star) starColor() rl.Color {
 	var r, g, b uint8
 	starType := rand.Float32()
-	alpha := uint8(brightness * 255)
+	alpha := uint8(s.Brightness * 255)
 
 	switch {
 	case starType < 0.7: // 70% - Red and orange stars (2500K - 5200K)
