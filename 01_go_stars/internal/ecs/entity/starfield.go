@@ -1,15 +1,14 @@
 package entity
 
 type StarField struct {
-	Stars []*Star
+	Stars []Star
 }
 
 func NewStarField(starCount uint16, width, height float32) *StarField {
-	stars := make([]*Star, starCount)
+	stars := make([]Star, starCount)
+
 	for i := range stars {
-		star := NewStar(width, height)
-		star.Color = star.starColor()
-		stars[i] = star
+		stars[i] = NewStar(width, height)
 	}
 
 	return &StarField{

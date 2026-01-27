@@ -7,6 +7,20 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+const (
+	colorRedBase         = 20  // the minimum red value for a pixel
+	colorRedMultiplier   = 80  // scales the red component based on noise
+	colorGreenBase       = 10  // the minimum green value
+	colorGreenMultiplier = 100 // scales the green component
+	colorBlueBase        = 40  // the minimum blue value
+	colorBlueMultiplier  = 175 // scales the blue component
+	alphaPower           = 1.5 // Higher values -> sharper edges and more transparency.
+	alphaMultiplier      = 200 // scales the final alpha value
+
+	scndNoiseFrequency = 2.5
+	scndNoiseInfluence = 0.3
+)
+
 type Nebula struct {
 	Width   int
 	Height  int
@@ -27,9 +41,11 @@ func NewNebula(width, height int, scale float64, p *perlin.Perlin) *Nebula {
 	return nebula
 }
 
+// TODO - optimize this code
 func (n *Nebula) GenerateTexture() {
 	img := rl.GenImageColor(n.Width, n.Height, rl.Black)
 
+	// it draw once and use as a texture in memory
 	for y := 0; y < n.Height; y++ {
 		for x := 0; x < n.Width; x++ {
 			color := n.GetColor(x, y)
@@ -46,16 +62,19 @@ func (n *Nebula) GetColor(x, y int) rl.Color {
 	nx := float64(x) / n.Scale
 	ny := float64(y) / n.Scale
 
-	// Get Perlin noise value in range [-1, 1]
-	noise := n.Perlin.Noise2D(nx, ny)
+	// Get primary noise, which formas the main cloud shapes.
+	value := (n.Perlin.Noise2D(nx, ny) + 1) / 2
 
-	// Normalize noise to range [0, 1] for color calculations
-	value := (noise + 1) / 2
+	// Get second noise
+	secondaryNoise := n.Perlin.Noise2D(nx*scndNoiseFrequency, ny*scndNoiseFrequency) * scndNoiseInfluence
+	complexValue := math.Max(0, math.Min(1, value+secondaryNoise))
 
-	r := uint8(20 + value*80)  // Red: 20-100 range
-	g := uint8(30 + value*100) // Green: 30-130 range
-	b := uint8(80 + value*175) // Blue: 80-255 range
-	a := uint8(255 * math.Pow(value, 1.5))
+	r := uint8(colorRedBase + complexValue*colorRedMultiplier)
+	g := uint8(colorGreenBase + complexValue*colorGreenMultiplier)
+	b := uint8(colorBlueBase + complexValue*colorBlueMultiplier)
+
+	// Alpha is calculated with a power function to create a nicer falloff effect.
+	a := uint8(200 * math.Pow(complexValue, 1.5))
 
 	return rl.NewColor(r, g, b, a)
 }
