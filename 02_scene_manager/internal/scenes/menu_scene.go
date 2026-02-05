@@ -13,6 +13,10 @@ func (ms *MenuScene) Init() {
 }
 
 func (ms *MenuScene) Update() string {
+	if rl.IsKeyPressed(rl.KeyEnter) {
+		return "game"
+	}
+
 	return ""
 }
 
@@ -21,4 +25,7 @@ func (ms *MenuScene) Draw() {
 	defer rl.EndDrawing()
 
 	rl.ClearBackground(rl.LightGray)
+}
+
+func (ms *MenuScene) Unload() {
 }

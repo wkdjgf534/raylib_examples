@@ -22,3 +22,7 @@ func (ls *LogoScene) Draw() {
 
 	rl.ClearBackground(rl.White)
 }
+
+func (ls *LogoScene) Unload() {
+
+}
