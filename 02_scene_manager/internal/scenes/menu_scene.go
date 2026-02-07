@@ -1,6 +1,10 @@
 package scenes
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+
+	"scene-manager/internal/constants"
+)
 
 type MenuScene struct {
 }
@@ -14,7 +18,7 @@ func (ms *MenuScene) Init() {
 
 func (ms *MenuScene) Update() string {
 	if rl.IsKeyPressed(rl.KeyEnter) {
-		return "game"
+		return constants.GameSceneName
 	}
 
 	return ""

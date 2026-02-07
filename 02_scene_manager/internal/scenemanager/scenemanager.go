@@ -1,13 +1,8 @@
 package scenemanager
 
 import (
+	"scene-manager/internal/constants"
 	"scene-manager/internal/scenes"
-)
-
-const (
-	logoScene = "logo"
-	menuScene = "menu"
-	gameScene = "game"
 )
 
 type SceneManager struct {
@@ -20,9 +15,9 @@ func NewSceneManager() *SceneManager {
 		scenes: make(map[string]scenes.Scene),
 	}
 
-	sm.AddScene(logoScene, scenes.NewLogoScene())
-	sm.AddScene(menuScene, scenes.NewMenuScene())
-	sm.AddScene(gameScene, scenes.NewGameScene())
+	sm.AddScene(constants.LogoSceneName, scenes.NewLogoScene())
+	sm.AddScene(constants.MenuSceneName, scenes.NewMenuScene())
+	sm.AddScene(constants.GameSceneName, scenes.NewGameScene())
 
 	return sm
 }
