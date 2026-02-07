@@ -25,6 +25,8 @@ func (ms *MenuScene) Draw() {
 	defer rl.EndDrawing()
 
 	rl.ClearBackground(rl.LightGray)
+	rl.DrawText("Main Menu", 20, 20, 40, rl.DarkGray)
+	rl.DrawText("Press ENTER to start game", 20, 70, 20, rl.Gray)
 }
 
 func (ms *MenuScene) Unload() {

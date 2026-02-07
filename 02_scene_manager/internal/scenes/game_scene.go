@@ -20,7 +20,7 @@ func NewGameScene() *GameScene {
 func (gs *GameScene) Init() {
 	gs.player = Player{
 		Position: rl.NewVector2(150, 150),
-		Color:    rl.Yellow,
+		Color:    rl.Red,
 		Radius:   15,
 		Speed:    3.0,
 	}
@@ -52,6 +52,10 @@ func (gs *GameScene) Draw() {
 	defer rl.EndDrawing()
 
 	rl.ClearBackground(rl.White)
+	rl.DrawText("Game Scene", 20, 20, 40, rl.Black)
+	rl.DrawText("User arrow keys to move", 20, 70, 20, rl.Black)
+	rl.DrawText("Press ESC to exit", 20, 100, 20, rl.Black)
+
 	rl.DrawCircleV(gs.player.Position, gs.player.Radius, gs.player.Color)
 }
 

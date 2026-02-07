@@ -4,15 +4,17 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 
 	cfg "scene-manager/internal/config"
+	sm "scene-manager/internal/scenemanager"
 )
 
 type Game struct {
 	cfg          *cfg.Config
-	sceneManager *SceneManager
+	sceneManager *sm.SceneManager
 }
 
 func New(cfg *cfg.Config) *Game {
-	manager := NewSceneManager()
+	manager := sm.NewSceneManager()
+	manager.SwitchTo("logo")
 
 	return &Game{
 		cfg:          cfg,

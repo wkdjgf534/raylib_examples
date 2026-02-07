@@ -1,4 +1,4 @@
-package game
+package scenemanager
 
 import (
 	"scene-manager/internal/scenes"
