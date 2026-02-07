@@ -3,7 +3,7 @@ package scenes
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 
-	"scene-manager/internal/constants"
+	"go-scene-manager/internal/constants"
 )
 
 type Player struct {

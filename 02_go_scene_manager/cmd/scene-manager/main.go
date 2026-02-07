@@ -1,8 +1,8 @@
 package main
 
 import (
-	"scene-manager/internal/config"
-	"scene-manager/internal/game"
+	"go-scene-manager/internal/config"
+	"go-scene-manager/internal/game"
 )
 
 func main() {

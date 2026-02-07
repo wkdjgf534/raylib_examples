@@ -3,9 +3,9 @@ package game
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 
-	cfg "scene-manager/internal/config"
-	"scene-manager/internal/constants"
-	sm "scene-manager/internal/scenemanager"
+	cfg "go-scene-manager/internal/config"
+	"go-scene-manager/internal/constants"
+	sm "go-scene-manager/internal/scenemanager"
 )
 
 type Game struct {

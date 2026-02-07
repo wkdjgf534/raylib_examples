@@ -1,8 +1,8 @@
 package scenemanager
 
 import (
-	"scene-manager/internal/constants"
-	"scene-manager/internal/scenes"
+	"go-scene-manager/internal/constants"
+	"go-scene-manager/internal/scenes"
 )
 
 type SceneManager struct {

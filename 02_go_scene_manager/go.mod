@@ -1,4 +1,4 @@
-module scene-manager
+module go-scene-manager
 
 go 1.25.6
 
