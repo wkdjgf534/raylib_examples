@@ -29,8 +29,9 @@ func (ls *LogoScene) Draw() {
 	defer rl.EndDrawing()
 
 	rl.ClearBackground(rl.Blue)
-	rl.DrawText("Logo Scene", 20, 20, 40, rl.Black)
+	rl.DrawText("Logo Scene", 20, 20, 40, rl.DarkGray)
 	rl.DrawText("Press ENTER to continue", 20, 70, 20, rl.DarkGray)
+	rl.DrawText("Press ESC to exit", 20, 100, 20, rl.DarkGray)
 }
 
 func (ls *LogoScene) Unload() {
