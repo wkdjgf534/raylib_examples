@@ -1,7 +1,11 @@
 package entity
 
 import (
+	"image"
+	"image/color"
 	"math"
+	"runtime"
+	"sync"
 
 	"github.com/aquilax/go-perlin"
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -37,44 +41,72 @@ func NewNebula(width, height int, scale float64, p *perlin.Perlin) *Nebula {
 		Perlin: p,
 	}
 
-	nebula.GenerateTexture()
+	nebula.generateAndLoadTexture()
 	return nebula
 }
 
-// TODO - optimize this code
-func (n *Nebula) GenerateTexture() {
-	img := rl.GenImageColor(n.Width, n.Height, rl.Black)
+// generateAndLoadTexture - creates the nebula image data in memory and uploads it to the GPU as a texture.
+func (n *Nebula) generateAndLoadTexture() {
+	// Create a standard Go image.RGBA object.
+	// This is a safe, idiomatic way to handle image data in Go.
+	// The underlying data is still a contiguous block of memory, so it's very fast.
+	goImg := image.NewRGBA(image.Rect(0, 0, n.Width, n.Height))
 
-	// it draw once and use as a texture in memory
-	for y := 0; y < n.Height; y++ {
-		for x := 0; x < n.Width; x++ {
-			color := n.GetColor(x, y)
-			rl.ImageDrawPixel(img, int32(x), int32(y), color)
+	numWorkers := runtime.NumCPU()
+	var wg sync.WaitGroup
+	rowsPerWorker := n.Height / numWorkers
+
+	for i := range numWorkers {
+		wg.Add(1)
+		startY := i * rowsPerWorker
+		endY := startY + rowsPerWorker
+		if i == numWorkers-1 {
+			endY = n.Height
 		}
+
+		go func(startY, endY int) {
+			defer wg.Done()
+			for y := startY; y < endY; y++ {
+				for x := 0; x < n.Width; x++ {
+					noiseVal := n.calculateNoiseValue(x, y)
+					pixelColor := mapNoiseToColor(noiseVal)
+					goImg.SetRGBA(x, y, pixelColor)
+				}
+			}
+		}(startY, endY)
 	}
 
-	n.Texture = rl.LoadTextureFromImage(img)
-	rl.UnloadImage(img) // release memory
+	wg.Wait()
+
+	rlImg := rl.NewImageFromImage(goImg)       // Convert a standard Go image.Image into a Raylib image.
+	n.Texture = rl.LoadTextureFromImage(rlImg) // Load the Raylib image data into a GPU texture.
+	rl.UnloadImage(rlImg)                      // Unload the CPU-side Raylib image data to free up memory.
 }
 
-func (n *Nebula) GetColor(x, y int) rl.Color {
+// calculateNoiseValue - computes the final noise value (0.0 to 1.0) for coordinate.
+func (n *Nebula) calculateNoiseValue(x, y int) float64 {
 	// Scale coordinates for noise sampling
 	nx := float64(x) / n.Scale
 	ny := float64(y) / n.Scale
 
-	// Get primary noise, which formas the main cloud shapes.
+	// Get primary noise, which forms the main cloud shapes.
 	value := (n.Perlin.Noise2D(nx, ny) + 1) / 2
 
 	// Get second noise
 	secondaryNoise := n.Perlin.Noise2D(nx*scndNoiseFrequency, ny*scndNoiseFrequency) * scndNoiseInfluence
 	complexValue := math.Max(0, math.Min(1, value+secondaryNoise))
 
-	r := uint8(colorRedBase + complexValue*colorRedMultiplier)
-	g := uint8(colorGreenBase + complexValue*colorGreenMultiplier)
-	b := uint8(colorBlueBase + complexValue*colorBlueMultiplier)
+	return complexValue
+}
+
+// mapNoiseToColor - converts a noise value (0.0 to 1.0) into a final color.
+func mapNoiseToColor(noiseValue float64) color.RGBA {
+	r := uint8(colorRedBase + noiseValue*colorRedMultiplier)
+	g := uint8(colorGreenBase + noiseValue*colorGreenMultiplier)
+	b := uint8(colorBlueBase + noiseValue*colorBlueMultiplier)
 
 	// Alpha is calculated with a power function to create a nicer falloff effect.
-	a := uint8(200 * math.Pow(complexValue, 1.5))
+	a := uint8(200 * math.Pow(noiseValue, 1.5))
 
-	return rl.NewColor(r, g, b, a)
+	return color.RGBA{R: r, G: g, B: b, A: a}
 }
