@@ -32,6 +32,6 @@ func (g *Game) Run() {
 
 	for !rl.WindowShouldClose() {
 		g.sceneManager.Update()
-		g.sceneManager.Draw()
+		g.sceneManager.Draw(g.cfg)
 	}
 }

@@ -3,6 +3,7 @@ package scenes
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 
+	"go-scene-manager/internal/config"
 	"go-scene-manager/internal/constants"
 )
 
@@ -24,7 +25,7 @@ func (ms *MenuScene) Update() string {
 	return ""
 }
 
-func (ms *MenuScene) Draw() {
+func (ms *MenuScene) Draw(_ *config.Config) {
 	rl.BeginDrawing()
 	defer rl.EndDrawing()
 

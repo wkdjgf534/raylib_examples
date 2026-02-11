@@ -3,6 +3,7 @@ package scenes
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 
+	"go-scene-manager/internal/config"
 	"go-scene-manager/internal/constants"
 )
 
@@ -51,7 +52,7 @@ func (gs *GameScene) Update() string {
 	return ""
 }
 
-func (gs *GameScene) Draw() {
+func (gs *GameScene) Draw(_ *config.Config) {
 	rl.BeginDrawing()
 	defer rl.EndDrawing()
 

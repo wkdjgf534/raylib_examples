@@ -1,6 +1,7 @@
 package scenemanager
 
 import (
+	"go-scene-manager/internal/config"
 	"go-scene-manager/internal/constants"
 	"go-scene-manager/internal/scenes"
 )
@@ -51,8 +52,8 @@ func (sm *SceneManager) Update() {
 }
 
 // Draw -
-func (sm *SceneManager) Draw() {
+func (sm *SceneManager) Draw(cfg *config.Config) {
 	if sm.currentScene != nil {
-		sm.currentScene.Draw()
+		sm.currentScene.Draw(cfg)
 	}
 }
